@@ -7,8 +7,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { SignUpDto } from './dto/signUp.dto';
-import { SignInDto } from './dto/signIn.dto';
+import { SignUpDto } from './dto/sign-up.dto';
+import { SignInDto } from './dto/sign-in.dto';
 import { User } from './entities/user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { UserInfo } from 'src/utils/userInfo.decorator';
@@ -16,7 +16,7 @@ import { UserInfo } from 'src/utils/userInfo.decorator';
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
+  // 회원 가입
   @Post('sign-up')
   async signUp(@Body() signUpDto: SignUpDto) {
     const savedUser = await this.userService.signUp(
@@ -30,7 +30,7 @@ export class UserController {
       data: savedUser,
     };
   }
-
+  // 로그인
   @Post('sign-in')
   async signIn(@Body() signInDto: SignInDto) {
     const tokens = await this.userService.signIn(
@@ -43,7 +43,7 @@ export class UserController {
       data: tokens,
     };
   }
-
+  // 프로필 보기
   @UseGuards(AuthGuard('jwt'))
   @Get('me')
   async getProfile(@UserInfo() user: User) {
