@@ -1,7 +1,7 @@
 export enum ShowCategory {
-  Musical,
-  Theater,
-  Music,
-  Entertainment,
-  None,
+  Musical = 'musical',
+  Theater = 'theater',
+  Music = 'music',
+  Entertainment = 'entertainment',
+  None = 'none',
 }
