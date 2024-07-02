@@ -1,17 +1,27 @@
-import { Body, Controller, HttpStatus, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ShowService } from './show.service';
 import { CreateShowDto } from './dto/create-show.dto';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/roles.decorator';
 import { Role } from 'src/user/types/user-role.type';
+import { GetListQueryDto } from './dto/get-list-query.dto';
 
 @UseGuards(RolesGuard)
 @Controller('show')
 export class ShowController {
   constructor(private readonly showService: ShowService) {}
-  // 공연 등록
+  // 공연 등록 API
   @Roles(Role.Admin)
   @Post()
+  // CreateShowDto 타입의 req.body 값을 createShowDto 변수에 담는다.
   async createShow(@Body() createShowDto: CreateShowDto) {
     const createdShow = await this.showService.createShow(
       createShowDto.name,
@@ -27,6 +37,16 @@ export class ShowController {
       status: HttpStatus.CREATED,
       message: '공연 등록이 성공하였습니다.',
       data: createdShow,
+    };
+  }
+  // 공연 목록 조회 API
+  @Get('list')
+  async getList(@Query() query: GetListQueryDto) {
+    const list = await this.showService.getList(query);
+    return {
+      status: HttpStatus.OK,
+      message: '공연 목록 조회를 성공했습니다.',
+      data: list,
     };
   }
 }

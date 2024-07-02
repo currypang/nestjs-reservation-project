@@ -16,7 +16,7 @@ import { UserInfo } from 'src/utils/userInfo.decorator';
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-  // 회원 가입
+  // 회원 가입 API
   @Post('sign-up')
   async signUp(@Body() signUpDto: SignUpDto) {
     const savedUser = await this.userService.signUp(
@@ -30,7 +30,7 @@ export class UserController {
       data: savedUser,
     };
   }
-  // 로그인
+  // 로그인 API
   @Post('sign-in')
   async signIn(@Body() signInDto: SignInDto) {
     const tokens = await this.userService.signIn(
@@ -43,7 +43,7 @@ export class UserController {
       data: tokens,
     };
   }
-  // 프로필 보기
+  // 프로필 보기 API
   @UseGuards(AuthGuard('jwt'))
   @Get('me')
   async getProfile(@UserInfo() user: User) {

@@ -4,6 +4,8 @@ import { Show } from './entities/shows.entity';
 import { Repository } from 'typeorm';
 import { Time } from './dto/time.dto';
 import { ShowCategory } from './types/show-category.type';
+import { GetListQueryDto } from './dto/get-list-query.dto';
+import _ from 'lodash';
 
 @Injectable()
 export class ShowService {
@@ -33,5 +35,18 @@ export class ShowService {
       seatInfo,
     });
     return createdShow;
+  }
+  // 공연 목록 조회 로직. query => GetListQueryDto { category: 'Musical' }
+  async getList(query: GetListQueryDto) {
+    const category = query.category;
+    // query 조건 없을 시 모든 목록 조회
+    if (_.isNil(category)) {
+      return await this.showRepository.find();
+    } else {
+      // 쿼리 조건에 따라 카테고리 별 목록 조회
+      return await this.showRepository.find({
+        where: { category },
+      });
+    }
   }
 }
