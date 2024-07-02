@@ -41,7 +41,7 @@ export class Show {
   time: { date: string; time: string }[];
 
   @Column({ type: 'int', nullable: false })
-  seat_info: number;
+  seatInfo: number;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;

@@ -10,6 +10,7 @@ import { UserModule } from './user/user.module';
 import { User } from './user/entities/user.entity';
 import { Token } from './user/entities/tokens.entity';
 import { ShowModule } from './show/show.module';
+import { Show } from './show/entities/shows.entity';
 
 const typeOrmModuleOptions = {
   useFactory: async (
@@ -22,7 +23,7 @@ const typeOrmModuleOptions = {
     host: configService.get('DB_HOST'),
     port: configService.get('DB_PORT'),
     database: configService.get('DB_NAME'),
-    entities: [User, Token],
+    entities: [User, Token, Show],
     synchronize: configService.get('DB_SYNC'),
     logging: true,
   }),
