@@ -5,7 +5,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Role } from '../types/userRole.type';
+import { Role } from '../types/user-role.type';
 import { Token } from './tokens.entity';
 
 @Entity({

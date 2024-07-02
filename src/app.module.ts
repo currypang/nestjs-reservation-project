@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { User } from './user/entities/user.entity';
 import { Token } from './user/entities/tokens.entity';
+import { ShowModule } from './show/show.module';
 
 const typeOrmModuleOptions = {
   useFactory: async (
@@ -45,6 +46,7 @@ const typeOrmModuleOptions = {
     TypeOrmModule.forRootAsync(typeOrmModuleOptions),
     AuthModule,
     UserModule,
+    ShowModule,
   ],
   controllers: [AppController],
   providers: [AppService],

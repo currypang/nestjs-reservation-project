@@ -23,7 +23,7 @@ export class UserService {
     private jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
-
+  // 회원가입 로직
   async signUp(email: string, nickname: string, password: string) {
     // 이메일 중복시 오류 처리
     const existingEmail = await this.findByEmail(email);
@@ -52,7 +52,7 @@ export class UserService {
     const { password: _, ...userWithoutPassword } = savedUser;
     return userWithoutPassword;
   }
-
+  // 로그인 로직
   async signIn(email: string, password: string) {
     const user = await this.userRepository.findOne({
       select: ['id', 'email', 'password'],
@@ -83,6 +83,7 @@ export class UserService {
     );
     return tokens;
   }
+  // 이메일로 유저정보 확인 로직
   async findByEmail(email: string) {
     return await this.userRepository.findOne({ where: { email } });
   }
