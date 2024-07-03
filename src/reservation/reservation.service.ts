@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Reservation } from './entities/reservations.entity';
 import { DataSource, Repository } from 'typeorm';
@@ -6,6 +10,7 @@ import { User } from 'src/user/entities/user.entity';
 import { CreateReservationParamsDto } from './dto/create-reservation-params.dto';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { Show } from 'src/show/entities/shows.entity';
+import { DeleteReservationParamsDto } from './dto/delete-reservation-params.dto';
 
 @Injectable()
 export class ReservationService {
@@ -77,5 +82,33 @@ export class ReservationService {
       order: { createdAt: 'DESC' },
     });
     return reservationList;
+  }
+  // 예약 취소 로직
+  async deleteReservation(user: User, params: DeleteReservationParamsDto) {
+    // 트랜지션 사용
+    return this.dataSource.transaction(async (manager) => {
+      const selectedReservation = await manager.findOne(Reservation, {
+        where: { userId: user.id, id: params.id },
+      });
+      // 해당되는 예약 없을 시 처리
+      if (!selectedReservation) {
+        throw new NotFoundException('예매 정보가 없습니다.');
+      }
+      const currentDate = new Date();
+      const reservationDate = new Date(selectedReservation.showTime.time);
+      reservationDate.setHours(reservationDate.getHours() - 3);
+      // 현재 시간이 공연 시작 3시간 이내 일 때(현재시간이 공연시작 3시간 전 시간보다 늦을 때)에러처리
+      if (currentDate > reservationDate) {
+        throw new ConflictException(
+          '공연 시작 3시간 전 까지만 예매를 취소 할 수 있습니다.',
+        );
+      }
+      // 유저 포인트 환불
+      const refundedPoint = user.point + selectedReservation.price;
+      await manager.save(User, { id: user.id, point: refundedPoint });
+      // 예매 정보 삭제. softDelete 사용
+      await manager.softDelete(Reservation, params.id);
+      return { id: params.id };
+    });
   }
 }

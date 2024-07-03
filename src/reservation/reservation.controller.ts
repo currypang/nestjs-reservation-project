@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Param,
@@ -13,6 +14,7 @@ import { UserInfo } from 'src/utils/userInfo.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { CreateReservationParamsDto } from './dto/create-reservation-params.dto';
 import { CreateReservationDto } from './dto/create-reservation.dto';
+import { DeleteReservationParamsDto } from './dto/delete-reservation-params.dto';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('reservation')
@@ -46,6 +48,22 @@ export class ReservationController {
       status: HttpStatus.OK,
       message: '예약 목록 조회에 성공하였습니다.',
       data: reservationList,
+    };
+  }
+  // 예매 취소 API
+  @Delete(':id')
+  async deleteReservation(
+    @UserInfo() user: User,
+    @Param() params: DeleteReservationParamsDto,
+  ) {
+    const deletedReservation = await this.reservationService.deleteReservation(
+      user,
+      params,
+    );
+    return {
+      status: HttpStatus.OK,
+      message: '예약 취소에 성공하였습니다.',
+      data: deletedReservation,
     };
   }
 }
