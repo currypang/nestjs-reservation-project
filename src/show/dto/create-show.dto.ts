@@ -10,6 +10,7 @@ import {
 import { ShowCategory } from '../types/show-category.type';
 import { Type } from 'class-transformer';
 import { Time } from './time.dto';
+import { SeatInfo } from './seat-info.dto';
 
 export class CreateShowDto {
   @IsString()
@@ -43,7 +44,9 @@ export class CreateShowDto {
   @IsNotEmpty({ message: '시간 정보를 입력해주세요.' })
   time: Time[];
 
-  @IsNumber()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => SeatInfo)
   @IsNotEmpty({ message: '좌석 정보를 입력해주세요.' })
-  seatInfo: number;
+  seatInfo: SeatInfo[];
 }
