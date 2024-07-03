@@ -41,12 +41,23 @@ export class ShowController {
   }
   // 공연 목록 조회 API
   @Get('list')
-  async getList(@Query() query: GetListQueryDto) {
+  async getShowList(@Query() query: GetListQueryDto) {
     const list = await this.showService.getList(query);
     return {
       status: HttpStatus.OK,
       message: '공연 목록 조회를 성공했습니다.',
       data: list,
+    };
+  }
+  // 공연 검색 API
+  @Get()
+  async searchShows(@Query() query) {
+    console.log('query', query);
+    const searchedShows = await this.showService.searchShows(query);
+    return {
+      status: HttpStatus.OK,
+      message: '공연 검색 조회를 성공했습니다.',
+      data: searchedShows,
     };
   }
 }
