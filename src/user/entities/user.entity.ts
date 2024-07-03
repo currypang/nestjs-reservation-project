@@ -2,11 +2,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Role } from '../types/user-role.type';
 import { Token } from './tokens.entity';
+import { Reservation } from 'src/reservation/entities/reservations.entity';
 
 @Entity({
   name: 'users',
@@ -35,4 +37,7 @@ export class User {
 
   @OneToOne(() => Token, (token) => token.user)
   token: Token;
+
+  @OneToMany(() => Reservation, (reservation) => reservation.user)
+  reservations: Reservation[];
 }

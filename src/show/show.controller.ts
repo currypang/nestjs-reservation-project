@@ -33,7 +33,7 @@ export class ShowController {
       createShowDto.location,
       createShowDto.price,
       createShowDto.img,
-      createShowDto.time,
+      createShowDto.showTime,
       createShowDto.seatInfo,
     );
     return {

@@ -24,7 +24,7 @@ export class ShowService {
     location: string,
     price: number,
     img: string,
-    time: Time[],
+    showTime: Time[],
     seatInfo: SeatInfo[],
   ) {
     const createdShow = await this.showRepository.save({
@@ -34,7 +34,7 @@ export class ShowService {
       location,
       price,
       img,
-      time,
+      showTime,
       seatInfo,
     });
     return createdShow;
