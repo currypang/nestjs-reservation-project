@@ -17,6 +17,9 @@ export class Token {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ type: 'int', name: 'user_id' })
+  userId: number;
+
   @Column({ type: 'varchar', nullable: true })
   refreshToken: string;
 
@@ -32,7 +35,4 @@ export class Token {
   @OneToOne(() => User, (user) => user.token)
   @JoinColumn({ name: 'user_id' })
   user: User;
-
-  @Column({ type: 'int', name: 'user_id' })
-  userId: number;
 }

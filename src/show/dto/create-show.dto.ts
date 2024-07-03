@@ -42,7 +42,7 @@ export class CreateShowDto {
   @ValidateNested({ each: true })
   @Type(() => Time)
   @IsNotEmpty({ message: '시간 정보를 입력해주세요.' })
-  time: Time[];
+  showTime: Time[];
 
   @IsArray()
   @ValidateNested({ each: true })

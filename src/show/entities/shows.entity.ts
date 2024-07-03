@@ -2,10 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { ShowCategory } from '../types/show-category.type';
+import { Reservation } from 'src/reservation/entities/reservations.entity';
 
 @Entity({
   name: 'shows',
@@ -38,7 +40,7 @@ export class Show {
   img: string;
 
   @Column({ type: 'json', nullable: false })
-  time: { showRound: number; time: string }[];
+  showTime: { showRound: number; time: string }[];
 
   @Column({ type: 'json', nullable: false })
   seatInfo: { showRound: number; remainingSeats: number }[];
@@ -46,6 +48,12 @@ export class Show {
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
+  @UpdateDateColumn({
+    type: 'timestamp',
+    precision: 6,
+  })
   updatedAt: Date;
+
+  @OneToMany(() => Reservation, (reservation) => reservation.show)
+  reservations: Reservation[];
 }

@@ -11,6 +11,8 @@ import { User } from './user/entities/user.entity';
 import { Token } from './user/entities/tokens.entity';
 import { ShowModule } from './show/show.module';
 import { Show } from './show/entities/shows.entity';
+import { ReservationModule } from './reservation/reservation.module';
+import { Reservation } from './reservation/entities/reservations.entity';
 
 const typeOrmModuleOptions = {
   useFactory: async (
@@ -23,7 +25,7 @@ const typeOrmModuleOptions = {
     host: configService.get('DB_HOST'),
     port: configService.get('DB_PORT'),
     database: configService.get('DB_NAME'),
-    entities: [User, Token, Show],
+    entities: [User, Token, Show, Reservation],
     synchronize: configService.get('DB_SYNC'),
     logging: true,
   }),
@@ -48,6 +50,7 @@ const typeOrmModuleOptions = {
     AuthModule,
     UserModule,
     ShowModule,
+    ReservationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
