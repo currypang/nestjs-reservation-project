@@ -2,6 +2,7 @@ import { Show } from 'src/show/entities/shows.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -32,6 +33,9 @@ export class Reservation {
 
   @Column({ type: 'int', nullable: false })
   price: number;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
 
   @ManyToOne(() => User, (user) => user.reservations, {
     onDelete: 'CASCADE',

@@ -70,4 +70,12 @@ export class ReservationService {
       return reservation;
     });
   }
+  // 예약 목록 조회 로직
+  async getReservationList(user: User) {
+    const reservationList = await this.reservationRepository.find({
+      where: { userId: user.id },
+      order: { createdAt: 'DESC' },
+    });
+    return reservationList;
+  }
 }
