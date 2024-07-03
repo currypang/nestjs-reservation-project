@@ -38,10 +38,10 @@ export class Show {
   img: string;
 
   @Column({ type: 'json', nullable: false })
-  time: { date: string; time: string }[];
+  time: { showRound: number; time: string }[];
 
-  @Column({ type: 'int', nullable: false })
-  seatInfo: number;
+  @Column({ type: 'json', nullable: false })
+  seatInfo: { showRound: number; remainingSeats: number }[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;

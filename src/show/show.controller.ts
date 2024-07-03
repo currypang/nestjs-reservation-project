@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpStatus,
+  Param,
   Post,
   Query,
   UseGuards,
@@ -13,6 +14,8 @@ import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/roles.decorator';
 import { Role } from 'src/user/types/user-role.type';
 import { GetListQueryDto } from './dto/get-list-query.dto';
+import { SearchShowsQueryDto } from './dto/search-shows-query.dto';
+import { SearchShowParamsDto } from './dto/search-show-params.dto';
 
 @UseGuards(RolesGuard)
 @Controller('show')
@@ -51,13 +54,22 @@ export class ShowController {
   }
   // 공연 검색 API
   @Get()
-  async searchShows(@Query() query) {
-    console.log('query', query);
+  async searchShows(@Query() query: SearchShowsQueryDto) {
     const searchedShows = await this.showService.searchShows(query);
     return {
       status: HttpStatus.OK,
       message: '공연 검색 조회를 성공했습니다.',
       data: searchedShows,
+    };
+  }
+  // 공연 상세 검색 API. @Params('id') 대신 @Param()을 사용하여 전체 파라미터 객체를 DTO로 변환하고 타입 검증을 수행
+  @Get('details/:id')
+  async searchShowById(@Param() params: SearchShowParamsDto) {
+    const searchedShow = await this.showService.searchShowById(params);
+    return {
+      status: HttpStatus.OK,
+      message: '공연 상세 조회를 성공했습니다.',
+      data: searchedShow,
     };
   }
 }

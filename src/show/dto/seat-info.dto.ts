@@ -1,11 +1,11 @@
-import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 
-export class Time {
+export class SeatInfo {
   @IsNumber()
   @IsNotEmpty({ message: '회차를 입력해주세요.' })
   showRound: number;
 
-  @IsString()
+  @IsNumber()
   @IsNotEmpty({ message: '공연 시간을 입력해주세요.' })
-  time: string;
+  remainingSeats: number;
 }
