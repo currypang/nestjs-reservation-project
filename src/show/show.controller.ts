@@ -16,6 +16,7 @@ import { Role } from 'src/user/types/user-role.type';
 import { GetListQueryDto } from './dto/get-list-query.dto';
 import { SearchShowsQueryDto } from './dto/search-shows-query.dto';
 import { SearchShowParamsDto } from './dto/search-show-params.dto';
+import { CreateVenueDto } from './dto/create-venue.dto';
 
 @UseGuards(RolesGuard)
 @Controller('show')
@@ -26,16 +27,7 @@ export class ShowController {
   @Post()
   // CreateShowDto 타입의 req.body 값을 createShowDto 변수에 담는다.
   async createShow(@Body() createShowDto: CreateShowDto) {
-    const createdShow = await this.showService.createShow(
-      createShowDto.name,
-      createShowDto.description,
-      createShowDto.category,
-      createShowDto.location,
-      createShowDto.price,
-      createShowDto.img,
-      createShowDto.showTime,
-      createShowDto.seatInfo,
-    );
+    const createdShow = await this.showService.createShow(createShowDto);
     return {
       status: HttpStatus.CREATED,
       message: '공연 등록이 성공하였습니다.',
@@ -70,6 +62,17 @@ export class ShowController {
       status: HttpStatus.OK,
       message: '공연 상세 조회를 성공했습니다.',
       data: searchedShow,
+    };
+  }
+
+  // 공연장 등록 API
+  @Post('venue')
+  async createVenue(@Body() body: CreateVenueDto) {
+    const createdVenue = await this.showService.createVenue(body);
+    return {
+      status: HttpStatus.CREATED,
+      message: '공연장 등록을 성공했습니다.',
+      data: createdVenue,
     };
   }
 }

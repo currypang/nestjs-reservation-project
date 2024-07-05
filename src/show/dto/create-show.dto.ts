@@ -9,8 +9,6 @@ import {
 } from 'class-validator';
 import { ShowCategory } from '../types/show-category.type';
 import { Type } from 'class-transformer';
-import { Time } from './time.dto';
-import { SeatInfo } from './seat-info.dto';
 
 export class CreateShowDto {
   @IsString()
@@ -25,14 +23,14 @@ export class CreateShowDto {
   @IsNotEmpty({ message: '공연 카테고리를 입력해주세요.' })
   category: ShowCategory;
 
-  @IsString()
-  @IsNotEmpty({ message: '장소를 입력해주세요.' })
-  location: string;
+  @IsNumber()
+  @IsNotEmpty({ message: '공연장 ID를 입력해주세요.' })
+  venueId: number;
 
   @IsNumber()
   @Max(50000, { message: '가격은 50000 이하이어야 합니다.' })
   @IsNotEmpty({ message: '가격을 입력해주세요.' })
-  price: number;
+  basePrice: number;
 
   @IsString()
   @IsNotEmpty({ message: '이미지를 입력해주세요.' })
@@ -40,13 +38,7 @@ export class CreateShowDto {
   // @Type(() => Time)으로 Time 타입의 유효성 검사 가능
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => Time)
+  @Type(() => Date)
   @IsNotEmpty({ message: '시간 정보를 입력해주세요.' })
-  showTime: Time[];
-
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => SeatInfo)
-  @IsNotEmpty({ message: '좌석 정보를 입력해주세요.' })
-  seatInfo: SeatInfo[];
+  showTime: Date[];
 }

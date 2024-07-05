@@ -2,12 +2,16 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { ShowCategory } from '../types/show-category.type';
 import { Reservation } from 'src/reservation/entities/reservations.entity';
+import { ShowTime } from './show_times.entity';
+import { Venue } from './venues.entity';
 
 @Entity({
   name: 'shows',
@@ -30,20 +34,14 @@ export class Show {
   })
   category: ShowCategory;
 
-  @Column({ type: 'varchar', nullable: false })
-  location: string;
+  @Column({ type: 'int', name: 'venue_id' })
+  venueId: number;
 
   @Column({ type: 'int', nullable: false })
-  price: number;
+  basePrice: number;
 
   @Column({ type: 'varchar' })
   img: string;
-
-  @Column({ type: 'json', nullable: false })
-  showTime: { showRound: number; time: string }[];
-
-  @Column({ type: 'json', nullable: false })
-  seatInfo: { showRound: number; remainingSeats: number }[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
@@ -56,4 +54,11 @@ export class Show {
 
   @OneToMany(() => Reservation, (reservation) => reservation.show)
   reservations: Reservation[];
+
+  @OneToMany(() => ShowTime, (showTime) => showTime.show)
+  showTimes: ShowTime[];
+
+  @ManyToOne(() => Venue, (venue) => venue.shows)
+  @JoinColumn({ name: 'venue_id' })
+  venue: Venue;
 }
