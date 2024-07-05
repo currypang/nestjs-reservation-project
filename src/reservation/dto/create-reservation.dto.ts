@@ -1,12 +1,8 @@
-import { IsArray, IsDate, IsNotEmpty, ValidateNested } from 'class-validator';
+import { ArrayMinSize, ArrayNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateReservationDto {
-  @IsDate()
-  @IsNotEmpty({ message: '공연 시간을 입력해주세요.' })
-  showTime: Date;
-
-  @IsArray()
-  @ValidateNested({ each: true })
-  @IsNotEmpty({ message: '예매할 좌석을 입력해주세요.' })
+  @ArrayNotEmpty({ message: '예매할 좌석을 입력해주세요.' })
+  @ArrayMinSize(1, { message: '적어도 하나 이상의 좌석을 입력해주세요.' })
+  @IsNumber({}, { each: true, message: '좌석 ID는 숫자여야 합니다.' })
   seats: number[];
 }

@@ -13,10 +13,10 @@ import { ReservationService } from './reservation.service';
 import { UserInfo } from 'src/utils/userInfo.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { CreateReservationParamsDto } from './dto/create-reservation-params.dto';
-import { CreateReservationDto } from './dto/create-reservation.dto';
 import { DeleteReservationParamsDto } from './dto/delete-reservation-params.dto';
 import { GetVacantSeatsParamsDto } from 'src/reservation/dto/get-vacant-seats-params.dto';
 import { GetVacantSeatsDto } from 'src/reservation/dto/get-vacant-seats.dto';
+import { CreateReservationDto } from './dto/create-reservation.dto';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('reservation')
@@ -28,12 +28,12 @@ export class ReservationController {
   async createReservation(
     @UserInfo() user: User,
     @Param() params: CreateReservationParamsDto,
-    @Body() createReservationDto: CreateReservationDto,
+    @Body() body: CreateReservationDto,
   ) {
     const reservation = await this.reservationService.createReservation(
       user,
       params,
-      createReservationDto,
+      body,
     );
     return {
       status: HttpStatus.CREATED,
