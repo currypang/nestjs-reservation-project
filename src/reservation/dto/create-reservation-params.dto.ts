@@ -4,6 +4,6 @@ import { IsNotEmpty, IsNumber } from 'class-validator';
 export class CreateReservationParamsDto {
   @Type(() => Number)
   @IsNumber()
-  @IsNotEmpty({ message: '공연 ID를 입력해주세요.' })
+  @IsNotEmpty({ message: '공연 시간 ID를 입력해주세요.' })
   id: number;
 }

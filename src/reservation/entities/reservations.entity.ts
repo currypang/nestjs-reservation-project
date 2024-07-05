@@ -1,4 +1,4 @@
-import { Show } from 'src/show/entities/shows.entity';
+import { ShowTime } from 'src/show/entities/show_times.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
   Column,
@@ -20,11 +20,11 @@ export class Reservation {
   @Column({ type: 'int', name: 'user_id' })
   userId: number;
 
-  @Column({ type: 'int', name: 'show_id' })
-  showId: number;
+  @Column({ type: 'int', name: 'show_time_id' })
+  showTimeId: number;
 
-  @Column({ type: 'varchar', nullable: false })
-  venue: string;
+  @Column({ type: 'int', name: 'venue_id' })
+  venueId: number;
 
   @Column({ type: 'int', nullable: false })
   price: number;
@@ -41,7 +41,7 @@ export class Reservation {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @ManyToOne(() => Show, (show) => show.reservations)
-  @JoinColumn({ name: 'show_id' })
-  show: Show;
+  @ManyToOne(() => ShowTime, (showTime) => showTime.reservations)
+  @JoinColumn({ name: 'show_time_id' })
+  showTime: ShowTime;
 }

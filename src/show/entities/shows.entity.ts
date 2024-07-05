@@ -9,7 +9,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ShowCategory } from '../types/show-category.type';
-import { Reservation } from 'src/reservation/entities/reservations.entity';
 import { ShowTime } from './show_times.entity';
 import { Venue } from './venues.entity';
 
@@ -51,9 +50,6 @@ export class Show {
     precision: 6,
   })
   updatedAt: Date;
-
-  @OneToMany(() => Reservation, (reservation) => reservation.show)
-  reservations: Reservation[];
 
   @OneToMany(() => ShowTime, (showTime) => showTime.show)
   showTimes: ShowTime[];

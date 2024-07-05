@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Show } from './shows.entity';
 import { Seat } from './seats.entity';
+import { Reservation } from 'src/reservation/entities/reservations.entity';
 
 @Entity({
   name: 'show_times',
@@ -31,4 +32,7 @@ export class ShowTime {
 
   @OneToMany(() => Seat, (seat) => seat.showTime)
   seats: Seat[];
+
+  @OneToMany(() => Reservation, (reservation) => reservation.showTime)
+  reservations: Reservation[];
 }
