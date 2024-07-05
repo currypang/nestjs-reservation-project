@@ -1,11 +1,12 @@
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsArray, IsDate, IsNotEmpty, ValidateNested } from 'class-validator';
 
 export class CreateReservationDto {
-  @IsNumber()
+  @IsDate()
   @IsNotEmpty({ message: '공연 시간을 입력해주세요.' })
-  showRound: number;
+  showTime: Date;
 
-  @IsNumber()
-  @IsNotEmpty({ message: '공연 시간을 입력해주세요.' })
-  seatCount: number;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @IsNotEmpty({ message: '예매할 좌석을 입력해주세요.' })
+  seats: number[];
 }

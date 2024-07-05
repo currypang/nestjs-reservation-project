@@ -23,14 +23,8 @@ export class Reservation {
   @Column({ type: 'int', name: 'show_id' })
   showId: number;
 
-  @Column({ type: 'json', nullable: false })
-  showTime: { showRound: number; time: string };
-
   @Column({ type: 'varchar', nullable: false })
-  location: string;
-
-  @Column({ type: 'int', nullable: false })
-  seatCount: number;
+  venue: string;
 
   @Column({ type: 'int', nullable: false })
   price: number;

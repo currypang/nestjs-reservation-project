@@ -15,6 +15,8 @@ import { User } from 'src/user/entities/user.entity';
 import { CreateReservationParamsDto } from './dto/create-reservation-params.dto';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { DeleteReservationParamsDto } from './dto/delete-reservation-params.dto';
+import { GetVacantSeatsParamsDto } from 'src/reservation/dto/get-vacant-seats-params.dto';
+import { GetVacantSeatsDto } from 'src/reservation/dto/get-vacant-seats.dto';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('reservation')
@@ -64,6 +66,23 @@ export class ReservationController {
       status: HttpStatus.OK,
       message: '예약 취소에 성공하였습니다.',
       data: deletedReservation,
+    };
+  }
+  // 예매 가능 좌석 확인 API
+  @Get('seats/:id')
+  async getVacantSeats(
+    @Param() params: GetVacantSeatsParamsDto,
+    @Body() body: GetVacantSeatsDto,
+  ) {
+    console.log('11111111');
+    const vacantSeats = await this.reservationService.getVacantSeats(
+      params,
+      body,
+    );
+    return {
+      status: HttpStatus.OK,
+      message: '예매 가능 좌석 조회를 성공했습니다.',
+      data: vacantSeats,
     };
   }
 }
