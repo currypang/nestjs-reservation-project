@@ -6,7 +6,9 @@ import {
   Param,
   Post,
   Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ShowService } from './show.service';
 import { CreateShowDto } from './dto/create-show.dto';
@@ -17,17 +19,23 @@ import { GetListQueryDto } from './dto/get-list-query.dto';
 import { SearchShowsQueryDto } from './dto/search-shows-query.dto';
 import { SearchShowParamsDto } from './dto/search-show-params.dto';
 import { CreateVenueDto } from './dto/create-venue.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
-@UseGuards(RolesGuard)
 @Controller('show')
 export class ShowController {
   constructor(private readonly showService: ShowService) {}
   // 공연 등록 API
+  @UseGuards(RolesGuard)
   @Roles(Role.Admin)
+  @UseInterceptors(FileInterceptor('file'))
   @Post()
   // CreateShowDto 타입의 req.body 값을 createShowDto 변수에 담는다.
-  async createShow(@Body() createShowDto: CreateShowDto) {
-    const createdShow = await this.showService.createShow(createShowDto);
+  async createShow(
+    @Body() createShowDto: CreateShowDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    console.log('1111111');
+    const createdShow = await this.showService.createShow(createShowDto, file);
     return {
       status: HttpStatus.CREATED,
       message: '공연 등록이 성공하였습니다.',
@@ -66,6 +74,8 @@ export class ShowController {
   }
 
   // 공연장 등록 API
+  @UseGuards(RolesGuard)
+  @Roles(Role.Admin)
   @Post('venue')
   async createVenue(@Body() body: CreateVenueDto) {
     const createdVenue = await this.showService.createVenue(body);
@@ -74,5 +84,12 @@ export class ShowController {
       message: '공연장 등록을 성공했습니다.',
       data: createdVenue,
     };
+  }
+  // 테스트
+  @UseInterceptors(FileInterceptor('file'))
+  @Post('test')
+  async saveImage(@UploadedFile() file: Express.Multer.File) {
+    console.log('1111111');
+    return await this.showService.imageUpload(file);
   }
 }

@@ -5,10 +5,9 @@ import {
   IsNumber,
   IsString,
   Max,
-  ValidateNested,
 } from 'class-validator';
 import { ShowCategory } from '../types/show-category.type';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 
 export class CreateShowDto {
   @IsString()
@@ -23,22 +22,21 @@ export class CreateShowDto {
   @IsNotEmpty({ message: '공연 카테고리를 입력해주세요.' })
   category: ShowCategory;
 
+  @Type(() => Number)
   @IsNumber()
   @IsNotEmpty({ message: '공연장 ID를 입력해주세요.' })
   venueId: number;
 
+  @Type(() => Number)
   @IsNumber()
   @Max(50000, { message: '가격은 50000 이하이어야 합니다.' })
   @IsNotEmpty({ message: '가격을 입력해주세요.' })
   basePrice: number;
 
-  @IsString()
-  @IsNotEmpty({ message: '이미지를 입력해주세요.' })
-  img: string;
-  // @Type(() => Time)으로 Time 타입의 유효성 검사 가능
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => Date)
+  @Transform(({ value }) => {
+    return JSON.parse(value);
+  })
+  @IsArray({ message: 'showTime must be an array' })
   @IsNotEmpty({ message: '시간 정보를 입력해주세요.' })
   showTime: Date[];
 }

@@ -13,6 +13,9 @@ import { SeatGrade } from './types/seat-grade.type';
 import { Seat } from './entities/seats.entity';
 import { SEAT_CONSTANT } from 'src/constants/seat.constant';
 import { ShowTime } from './entities/show_times.entity';
+import { Bookable } from './types/bookable.type';
+import { AwsService } from 'src/aws/aws.service';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class ShowService {
@@ -21,12 +24,21 @@ export class ShowService {
     private showRepository: Repository<Show>,
     @InjectRepository(Venue)
     private venueRepository: Repository<Venue>,
+    @InjectRepository(Seat)
+    private seatRepository: Repository<Seat>,
+    @InjectRepository(ShowTime)
+    private showtimeRepository: Repository<ShowTime>,
     private dataSource: DataSource,
+    private awsService: AwsService,
   ) {}
 
   // 공연 등록 로직 - 공연 정보 등록과 함께, 상영되는 공연장 정보를 통해 예매 가능 좌석도 생성(트랜잭션 적용)
-  async createShow(createShowDto: CreateShowDto) {
+  async createShow(createShowDto: CreateShowDto, file: Express.Multer.File) {
     return this.dataSource.transaction(async (manager) => {
+      console.log('222222', createShowDto);
+      // multer
+      const img = await this.imageUpload(file);
+      createShowDto['img'] = img;
       // 상영될 공연장 정보
       const { venueId } = createShowDto;
       const selectedVenue = await manager.findOne(Venue, {
@@ -65,7 +77,7 @@ export class ShowService {
       );
       await manager.save(ShowTime, createdTimes);
 
-      // 공연장 정보를 통해 예매 좌석 생성
+      // // 공연장 정보를 통해 예매 좌석 생성
       const selectedTimes = await manager.find(ShowTime, {
         where: {
           showId: createdShow.id,
@@ -169,21 +181,50 @@ export class ShowService {
   // 공연 상세 검색 로직
   async searchShowById(params: SearchShowParamsDto) {
     const { id } = params;
-    // const searchedShow = await this.showRepository.findOne({
-    //   where: { id },
-    // });
-    console.log(id);
+    const searchedShow = await this.showRepository.findOne({
+      where: { id },
+    });
     // 예매 가능 여부 반환
-    // const isBookable = searchedShow.seatInfo.some(
-    //   (seat) => seat.remainingSeats > 0,
-    // );
-    // searchedShow['isBookable'] = isBookable;
-    return 'searchedShow';
+    const showTimes = await this.showtimeRepository.find({
+      where: { showId: id },
+    });
+    const isBookable = await Promise.all(
+      showTimes.map(async (showTime) => {
+        const bookableSeats = await this.seatRepository.findOne({
+          where: { showTimeId: showTime.id, bookable: Bookable.IsBookable },
+        });
+        if (bookableSeats) {
+          return { showTime: showTime.showTime, isBookable: true };
+        } else {
+          return { showTime: showTime.showTime, isBookable: false };
+        }
+      }),
+    );
+    // 시간대 별 예매 가능 여부 리턴 값에 포함
+    searchedShow['isBookable'] = isBookable;
+    return searchedShow;
   }
 
   // 공연장 등록 로직
   async createVenue(body: CreateVenueDto) {
     const createdVenue = await this.venueRepository.save(body);
     return createdVenue;
+  }
+  // 테스트 로직
+  // async saveImage(file: Express.Multer.File) {
+  //   return await this.imageUpload(file);
+  // }
+
+  async imageUpload(file: Express.Multer.File) {
+    const imageName = uuidv4();
+    const ext = file.originalname.split('.').pop();
+
+    const img = await this.awsService.imageUploadToS3(
+      `${imageName}.${ext}`,
+      file,
+      ext,
+    );
+
+    return img;
   }
 }
