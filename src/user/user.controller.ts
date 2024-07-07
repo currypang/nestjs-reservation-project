@@ -49,4 +49,26 @@ export class UserController {
   async getProfile(@UserInfo() user: User) {
     return user;
   }
+  // 토큰 재발급 API
+  @UseGuards(AuthGuard('jwt'))
+  @Post('refresh')
+  async refreshToken(@UserInfo() user: User) {
+    const tokens = await this.userService.refreshToken(user);
+    return {
+      status: HttpStatus.CREATED,
+      message: '토큰 재발급이 성공하였습니다.',
+      data: tokens,
+    };
+  }
+  // 로그 아웃 API
+  @UseGuards(AuthGuard('jwt'))
+  @Post('sign-out')
+  async signOut(@UserInfo() user: User) {
+    const loggedOutUserId = await this.userService.signOut(user);
+    return {
+      status: HttpStatus.OK,
+      message: '로그아웃이 성공하였습니다.',
+      data: loggedOutUserId,
+    };
+  }
 }
