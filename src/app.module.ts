@@ -16,6 +16,7 @@ import { Reservation } from './reservation/entities/reservations.entity';
 import { ShowTime } from './show/entities/show_times.entity';
 import { Venue } from './show/entities/venues.entity';
 import { Seat } from './show/entities/seats.entity';
+import { AwsModule } from './aws/aws.module';
 
 const typeOrmModuleOptions = {
   useFactory: async (
@@ -54,6 +55,7 @@ const typeOrmModuleOptions = {
     UserModule,
     ShowModule,
     ReservationModule,
+    AwsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

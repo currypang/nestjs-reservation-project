@@ -6,9 +6,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ShowTime } from './entities/show_times.entity';
 import { Venue } from './entities/venues.entity';
 import { Seat } from './entities/seats.entity';
+import { AwsModule } from 'src/aws/aws.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Show, ShowTime, Venue, Seat])],
+  imports: [TypeOrmModule.forFeature([Show, ShowTime, Venue, Seat]), AwsModule],
   providers: [ShowService],
   controllers: [ShowController],
 })
