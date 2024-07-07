@@ -87,4 +87,33 @@ export class UserService {
   async findByEmail(email: string) {
     return await this.userRepository.findOne({ where: { email } });
   }
+  // 토큰 재발급 로직
+  async refreshToken(user: User) {
+    const payload = { email: user.email, sub: user.id };
+    const tokens = {
+      accessToken: this.jwtService.sign(payload, { expiresIn: '12h' }),
+      refreshToken: this.jwtService.sign(payload, {
+        secret: this.configService.get<string>('JWT_REFRESH_SECRET_KEY'),
+        expiresIn: '7d',
+      }),
+    };
+    await this.tokenRepository.upsert(
+      {
+        userId: user.id,
+        refreshToken: tokens.refreshToken,
+      },
+      ['userId'],
+    );
+    return tokens;
+  }
+  // 로그 아웃 로직
+  async signOut(user: User) {
+    await this.tokenRepository.update(
+      {
+        userId: user.id,
+      },
+      { refreshToken: null },
+    );
+    return { id: user.id };
+  }
 }
