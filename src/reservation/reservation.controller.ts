@@ -74,7 +74,6 @@ export class ReservationController {
     @Param() params: GetVacantSeatsParamsDto,
     @Body() body: GetVacantSeatsDto,
   ) {
-    console.log('11111111');
     const vacantSeats = await this.reservationService.getVacantSeats(
       params,
       body,

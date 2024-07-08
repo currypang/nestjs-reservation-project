@@ -1,73 +1,69 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+## 1. 프로젝트의 목표
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+- NestJs, TypeScript, TypeOrm을 이용하여 온라인 공연 예매 서비스를 개발합니다.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 2. [api](https://rift-gallium-045.notion.site/Node-js-API-88f88700ad95448898e38bbc53f95545?pvs=4)
 
-## Description
+## 3. [ERD](https://drawsql.app/teams/currypangs-team/diagrams/reservation-project)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+도메인: https://currypang.shop/
 
-## Installation
+## 4. 구현한 필수 요구 사항
 
-```bash
-$ npm install
-```
+### 로그인, 회원가입, 프로필 기능, 토큰 재발급, 로그 아웃 구현
 
-## Running the app
+- **로그인/회원가입 API**
+  - 사용자 계정으로 로그인/회원가입 합니다.
+  - 가입 시 **100만 포인트를 지급**합니다.
+  - JWT 방식을 사용하여 accessToken, refreshToken을 발급합니다.
+  - refreshToken은 DB에 저장합니다.
+  - Cookie가 아니라 Authorization Header를 이용한 인증 방식
+- **프로필 API**
+  - 사용자 정보를 볼 수 있는 API 입니다.
+  - 필수로 볼 수 있는 정보로는 닉네임, 포인트입니다.
+- **토큰 재발급, 로그 아웃 구현**
+  - 토큰 재발급과 로그 아웃을 구현해 refreshToken을 컨트롤 할 수 있게합니다.
 
-```bash
-# development
-$ npm run start
+### 공연장 등록 기능, 새 공연 등록 기능 및 공연 목록 보기, 공연 검색하기, 공연 상세보기 기능 구현
 
-# watch mode
-$ npm run start:dev
+- **공연장 등록 API**
+  - 공연장 이름, 등급별 좌석 수, 카테고리 정보를 가진 공연장을 등록합니다.
+- **공연 등록 API**
+  - 사전에 어드민으로 지정된 유저만 해당 API를 호출할 수 있습니다.
+  - 유저를 어드민으로 지정하는 것 방법은 특정 컬럼에 어드민 여부 또는 역할을 저장합니다.
+  - 어드민은 새로운 공연을 해당 API를 통해서 등록할 수 있습니다.
+  - 공연을 등록하면 해당 공연의 각 회차 별 시간정보와, 공연 정보, 장소 정보를 가지는 showTime 테이블에 데이터가 생성됩니다.
+  - 공연을 등록하면 해당 공연의 각 시간대의 예매가능한 등급별 좌석들이 seats 테이블에 생성됩니다.
+  - multer를 이용해 s3 버킷에 이미지를 업로드합니다.
+- **공연 조회 API**
+  - 공연의 리스트를 조회합니다.
+  - 전체, 카테고리 별로 나뉘어서 조회 가능합니다.
+- **공연 검색 API**
+  - 공연명으로 공연을 검색합니다.
+  - 검색 결과를 반환합니다.
+- **공연 상세보기 API**
+  - 해당 공연의 정보를 반환합니다.
+  - 현재 예매가 가능한지 여부를 반환합니다.
+- **예매 목록 확인 API**
+  - 사용자가 예매하거나 과거에 예매한 공연들의 내역을 반환합니다.
+  - 목록은 예매 날짜 기준 **최신 순으로 정렬**하도록 합니다.
 
-# production mode
-$ npm run start:prod
-```
+## 4. 구현한 추가 요구 사항
 
-## Test
+### 공연의 좌석 예매 정보 확인, 좌석 지정 예매, 예매 취소 기능 구현
 
-```bash
-# unit tests
-$ npm run test
+- **예매 취소 API**
 
-# e2e tests
-$ npm run test:e2e
+  - 사용자가 선택한 예매를 취소합니다.
+  - 취소 확인 메시지를 포함합니다.
+  - **공연 시작 3시간 전까지만 예매를 취소**할 수 있습니다.
+  - 예매 취소 후 예매에 쓰였던 포인트는 환불이 되어야 합니다.
 
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+- **공연의 좌석 예매 정보 확인 API**
+  - 공연의 좌석 예매 정보 확인 API
+  - 예매 가능 좌석 정보 반환하는 기능을 추가합니다.
+  - 이게 가능하려면 공연마다 좌석 정보가 관리될 수 있게 ERD가 확장되어야 합니다.
+  - 반환 방식 (배열)
+- **좌석을 지정하여 예매하기 API**
+  - 선택한 좌석의 예매 여부를 확인하고 예매 상태를 업데이트합니다.
+  - 한번에 여러 장의 좌석을 예매 할 수 있어야 합니다.

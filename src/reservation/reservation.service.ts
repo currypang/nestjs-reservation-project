@@ -9,7 +9,6 @@ import { Reservation } from './entities/reservations.entity';
 import { DataSource, In, Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { CreateReservationParamsDto } from './dto/create-reservation-params.dto';
-import { Show } from 'src/show/entities/shows.entity';
 import { DeleteReservationParamsDto } from './dto/delete-reservation-params.dto';
 import { GetVacantSeatsParamsDto } from 'src/reservation/dto/get-vacant-seats-params.dto';
 import { GetVacantSeatsDto } from 'src/reservation/dto/get-vacant-seats.dto';
@@ -24,14 +23,10 @@ export class ReservationService {
   constructor(
     @InjectRepository(Reservation)
     private reservationRepository: Repository<Reservation>,
-    @InjectRepository(Show)
-    private showRepository: Repository<Show>,
     @InjectRepository(Seat)
     private seatRepository: Repository<Seat>,
     @InjectRepository(ShowTime)
     private showTimeRepository: Repository<ShowTime>,
-    @InjectRepository(User)
-    private UserRepository: Repository<User>,
     private dataSource: DataSource,
   ) {}
   // 공연 예매 로직(여러 좌석 예매)
@@ -125,7 +120,6 @@ export class ReservationService {
       const currentDate = new Date();
       const reservationDate = showTime.showTime;
       reservationDate.setHours(reservationDate.getHours() - 3);
-      console.log(currentDate, reservationDate);
       if (currentDate > reservationDate) {
         throw new ConflictException(
           '공연 시작 3시간 전 까지만 예매를 취소 할 수 있습니다.',

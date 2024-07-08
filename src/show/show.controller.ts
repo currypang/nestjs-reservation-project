@@ -34,7 +34,6 @@ export class ShowController {
     @Body() createShowDto: CreateShowDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    console.log('1111111');
     const createdShow = await this.showService.createShow(createShowDto, file);
     return {
       status: HttpStatus.CREATED,
@@ -84,12 +83,5 @@ export class ShowController {
       message: '공연장 등록을 성공했습니다.',
       data: createdVenue,
     };
-  }
-  // 테스트
-  @UseInterceptors(FileInterceptor('file'))
-  @Post('test')
-  async saveImage(@UploadedFile() file: Express.Multer.File) {
-    console.log('1111111');
-    return await this.showService.imageUpload(file);
   }
 }
