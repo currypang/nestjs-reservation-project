@@ -35,7 +35,6 @@ export class ShowService {
   // 공연 등록 로직 - 공연 정보 등록과 함께, 상영되는 공연장 정보를 통해 예매 가능 좌석도 생성(트랜잭션 적용)
   async createShow(createShowDto: CreateShowDto, file: Express.Multer.File) {
     return this.dataSource.transaction(async (manager) => {
-      console.log('222222', createShowDto);
       // multer
       const img = await this.imageUpload(file);
       createShowDto['img'] = img;
